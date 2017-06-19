@@ -1,13 +1,13 @@
-#PHP Pusher
+# PHP Pusher
 
 A PHP Websocket framework that is build on [Ratchet](http://socketo.me/) to create a powerfull Websocket Server,
 that pushes Data to your Clients to keep them up to Date.
 
-##Requirements
+## Requirements
 
 Shell access is required and root access is recommended.
 
-##Code Example
+## Code Example
 
 ```php
     <?php
