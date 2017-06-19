@@ -1,6 +1,7 @@
 {
     "name": "cbl/php-pusher",
     "description": "Php Package to create a Simple Websocket Pusher.",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "PhpPusher\\": "src/Pusher"
