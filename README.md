@@ -10,32 +10,32 @@ Shell access is required and root access is recommended.
 ## Code Example
 
 ```php
-    <?php
-    use PhpPusher\Server;
+<?php
+use PhpPusher\Server;
 
-    require_once __DIR__ . "/vendor/autoload.php";
+require_once __DIR__ . "/vendor/autoload.php";
 
-    // config
-    $config = [
-        'list' => [
-            'chat_messages' => [
-                'cache' => false,
-            ]
-        ],
-        'dict' => [
-            'some_data' => [
-                'auth' => ['login' => true]
-            ]
-        ],
-        'specials' => [
-            'online_counter' => true
+// config
+$config = [
+    'list' => [
+        'chat_messages' => [
+            'cache' => false,
         ]
-    ];
-    // Server Key
-    $key = "Password";
-    // Port
-    $port = 8080;
-    // Create Server
-    $server = new Server($key, $config, $port);
-    $server->run();
+    ],
+    'dict' => [
+        'some_data' => [
+            'auth' => ['login' => true]
+        ]
+    ],
+    'specials' => [
+        'online_counter' => true
+    ]
+];
+// Server Key
+$key = "Password";
+// Port
+$port = 8080;
+// Create Server
+$server = new Server($key, $config, $port);
+$server->run();
 ```
