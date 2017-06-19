@@ -50,7 +50,7 @@ use PhpPusher\Client;
 
 require_once __DIR__ . "/vendor/autoload.php";
 
-$client = new Client('Password', '', 'localhost', 8080);
+$client = new Client('Password', '', '127.0.0.1', 8080);
 
 echo $client->send('chat_message', 'Hi');
 echo $client->send('player', ['name' => 'Player1', 'data' => 'Some Data.']);
