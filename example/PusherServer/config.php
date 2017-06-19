@@ -48,27 +48,8 @@ return [
      */
     'dict' => [
         'roulette_game' => [
-            
+
         ]
-    ],
-
-    /**
-     * Timer
-     *
-     * Options:
-     * @param (integer) duration
-     * - Default:       30
-     * - Description:   Duration of the timer in seconds
-     * @param (string)  send_to
-     * - Default:       'all'
-     * - Description:   Send Data only to clients with the url {send_to} (Send to all clients if value is 'all')
-     * @param (list)    auth
-     * - Default:       []
-     * - Example:       ['user', 'admin']
-     * - Description:   Send Data only to authenticatet Clients (Send to all clients if list is empty)
-     */
-    'timer' => [
-
     ],
 
     /**
