@@ -1,0 +1,14 @@
+{
+    "name": "cbl/php-pusher",
+    "description": "Php Package to create a Simple Websocket Pusher.",
+    "autoload": {
+        "psr-4": {
+            "PhpPusher\\": "src/Pusher"
+        }
+    },
+    "require": {
+        "php": "^5.3.3 || ^7.0",
+        "cboden/ratchet": "^0.3.6",
+        "textalk/websocket": "^1.2"
+    }
+}
