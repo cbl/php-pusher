@@ -15,7 +15,7 @@ abstract class RatchetIoServer
     /**
      * IoServer Instance.
      */
-    protected $io_server;
+    public $io_server;
 
     /**
      * Server Port
@@ -31,10 +31,14 @@ abstract class RatchetIoServer
         $http_server        = new HttpServer($ws_server);
         $this->io_server    = IoServer::factory($http_server, $this->port);
         // Add Io Server to Interface
-        $interface->addIoServer($this->io_server);
+        $interface->addIoServer($this);
     }
 
+    /**
+     * Run the Websocket server.
+     */
     public function run() {
         $this->io_server->run();
     }
+
 }

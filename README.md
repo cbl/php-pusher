@@ -7,6 +7,10 @@ that pushes Data to your Clients to keep them up to Date.
 
 Shell access is required and root access is recommended.
 
+## Getting Started
+
+To install the framework, run: ```composer require cbl/php-pusher```
+
 ## Code Example
 
 Server:
@@ -15,13 +19,40 @@ Server:
 <?php
 use PhpPusher\Server;
 
-require_once __DIR__ . "/vendor/autoload.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
+
+class PusherServer extends Server
+{
+    public function authLogin($client) {
+        $cookies = $client->WebSocket->request->getCookies();
+        // return false if the client has no session
+        if(!isset($cookies['session']))
+            return false;
+        $session = $cookies['session'];
+        if(!$session)
+            return false;
+        // Return the user id
+        return 5;
+        //return getUserIdBySession(urldecode($session));
+    }
+
+    public function authAdmin($client) {
+        $admin_ids = [1,5,9];
+        if(in_array($client->login, $admin_ids))
+            return true;
+        return false;
+    }
+}
 
 // config
 $config = [
     'list' => [
         'chat_messages' => [
+            'save_auth' => true
+        ],
+        'wallet' => [
             'cache' => false,
+            'auth'  => ['login' => 'only']
         ]
     ],
     'dict' => [
@@ -38,7 +69,7 @@ $key = "Password";
 // Port
 $port = 8080;
 // Create Server
-$server = new Server($key, $config, $port);
+$server = new PusherServer('Password', $config, 8080);
 $server->run();
 ```
 
@@ -48,15 +79,19 @@ Client:
 <?php
 use PhpPusher\Client;
 
-require_once __DIR__ . "/vendor/autoload.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
 
-$client = new Client('Password', '', '127.0.0.1', 8080);
+$client = new Client('Password');
 
-echo $client->send('chat_message', 'Hi');
-echo $client->send('player', ['name' => 'Player1', 'data' => 'Some Data.']);
-// Start a Timer
-$name       = 'game';   // Timer name
-$duration   = 30;       // Timer duration in seconds
-$wait       = true;     // Wait for the {$duraiton} seconds or continue now
-echo $client->startTimer($name, $duration, $wait);
+$receiver = 5;
+// Send a Chat Message
+$client->send('chat_message', 'Hi!', $receiver);
+// Send wallet amount only to the receiver
+$client->send('wallet', 100, $receiver);
+// Start a timer
+$client->startTimer('game_timer', 30, true);
+// Publish game after timer
+$client->send('game', [
+    'data' => 'Some Data.'
+]);
 ```

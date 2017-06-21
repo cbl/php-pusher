@@ -13,22 +13,24 @@ class Client
         $this->client = new WebsocketClient($uri);
     }
 
-    public function send($name, $data) {
-        $this->_send('data', $name, $data);
+    public function send($name, $data, $receiver=false) {
+        $this->sendData('data', $name, $data, $receiver);
     }
 
     public function startTimer($name, $duration, $wait=true) {
-        $this->_send('timer', $name, $duration);
+        $this->sendData('timer', $name, $duration);
         if($wait)
-            return sleep($duration);
+            sleep($duration + 1);
     }
 
-    private function _send($type, $name, $data) {
+    private function sendData($type, $name, $data, $receiver=false) {
         $message = [
             'type' => $type,
             'name' => $name,
             'data' => $data
         ];
+        if($receiver)
+            $message['receiver'] = $receiver;
         $this->client->send(json_encode($message));
     }
 }

@@ -2,7 +2,7 @@
 
 namespace PhpPusher\Cache;
 
-trait CacheHandler
+trait CacheVariables
 {
     /**
      * Cache data

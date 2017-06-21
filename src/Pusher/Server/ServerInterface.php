@@ -1,26 +1,37 @@
 <?php
 namespace PhpPusher\Server;
 
+// Console logger
 use PhpPusher\Helper\Console;
-use PhpPusher\Auth\AuthenticationHandler;
-use PhpPusher\Config\ConfigHandler;
-use PhpPusher\Cache\CacheHandler;
-use PhpPusher\Cache\CacheSpecials;
-use PhpPusher\Cache\ClientHandler;
-use PhpPusher\Cache\FilterHandler;
 
+// Authentication handler
+use PhpPusher\Auth\AuthenticationHandler;
+
+// Configuration handler
+use PhpPusher\Config\ConfigHandler;
+
+// Cache handler
+use PhpPusher\Cache\CacheSpecials;
+use PhpPusher\Cache\CacheVariables;
+
+// Message handler
+use PhpPusher\Message\OutgoingMessageHandler;
+use PhpPusher\Message\IncommingMessageHandler;
+
+// Ratchet imports
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
 class ServerInterface implements MessageComponentInterface
 {
-    use CacheHandler;
+    use CacheVariables;
     use CacheSpecials;
-    use ClientHandler;
-    use FilterHandler;
+
     use ConfigHandler;
-    use MessageHandler;
     use AuthenticationHandler;
+
+    use OutgoingMessageHandler;
+    use IncommingMessageHandler;
 
     /**
      * Server Authentication Key
@@ -29,69 +40,71 @@ class ServerInterface implements MessageComponentInterface
 
     /**
      * Make local Variables
+     *
+     * @param string    $key        Key that is used to authenticate allowed clients, that can push data
+     * @param array     $config     Configuration array
      */
-    public function __construct($key, $config) {
+    public function __construct($key, array $config) {
         $this->key      = $key;
         $this->setConfig($config);
         $this->clients  = new \SplObjectStorage;
     }
 
-    public function addIoServer($io_server) {
-        $this->io_server = $io_server;
+    public function addIoServer($ratchet) {
+        $this->ratchet = $ratchet;
     }
 
     /**
-     * Check Authentication for new connection
-     * Send Cached data.
-     * @param $conn => connection
+     * Handle new connection.
+     *
+     * @param class     $client     New client that has connected
      */
     public function onOpen(ConnectionInterface $client) {
         // Check Authentication of the Connection
         $client = $this->authenticate($client);
         // Store the new connection to send messages to later
         $this->clients->attach($client);
-        //$this->onlineCounter();
+        // Update online Counter
+        $this->onlineCounter($client);
         // Send Cached Data to client
-        $this->sendEverything($client);
+        $this->sendAllDataToNewClient($client);
         // Console output
         Console::line('[#'.$client->resourceId.']: Connected. Server:('.$client->server.') Admin:('.$client->admin.') Login:('.$client->login.') Url:('.$client->url.')');
     }
 
     /**
-     * ...
-     * @param $from => Connection of sender
-     * @param $msg  => Message
+     * Handle incomming message.
+     *
+     * @param class     $from   Connection of sender
+     * @param string    $msg    Incomming message string
      */
     public function onMessage(ConnectionInterface $from, $message) {
         // Console Output
-        Console::line('[#'.$from->resourceId.']: Message '.$message);
+        Console::line('[#' . $from->resourceId . ']: Message ' . $message . '.');
         // Filter Message
-        $this->newMessage($from, $message);
-        //$filtered_msg = $this->filter->message($message);
-        // Check for Success
-        //if(!$filtered_msg['success'])
-        //    return false;
-        //$this->cache->push($from, $filtered_msg['category'], $filtered_msg['data'], $filtered_msg['event']);
+        $this->newIncommingMessage($from, $message);
     }
 
     /**
-     * Remove Connection from $this->clients
-     * @param $conn => Connection
+     * Handle closed connection.
+     *
+     * @param class     $client     Client that has closed the connection
      */
-    public function onClose(ConnectionInterface $conn) {
+    public function onClose(ConnectionInterface $client) {
         // The connection is closed, remove it, as we can no longer send it messages
-        $this->clients->detach($conn);
+        $this->clients->detach($client);
         // Console Output
-        Console::line('[#'.$conn->resourceId.']: Disconnected.');
+        Console::line('[#'.$client->resourceId.']: Disconnected.');
     }
 
     /**
-     * Close connection on Error
-     * @param $conn => Connection
-     * @param $e    => Error
+     * Handle errors.
+     *
+     * @param class     $client     Client
+     * @param error     $e          Error
      */
-    public function onError(ConnectionInterface $conn, \Exception $e) {
-        Console::line('[#'.$conn->resourceId.']: Error: '.$e->getMessage());
-        $conn->close();
+    public function onError(ConnectionInterface $client, \Exception $e) {
+        Console::line('[#'.$client->resourceId.']: Error: '.$e->getMessage());
+        $client->close();
     }
 }

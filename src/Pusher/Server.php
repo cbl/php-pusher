@@ -3,7 +3,7 @@ namespace PhpPusher;
 
 use PhpPusher\Server\RatchetIoServer;
 
-class Server extends RatchetIoServer
+abstract class Server extends RatchetIoServer
 {
-
+    
 }

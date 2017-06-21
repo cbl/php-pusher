@@ -13,7 +13,7 @@ return [
      * - Description:   Send Data only to clients with the url {send_to} (Send to all clients if value is 'all')
      * @param (list)    auth
      * - Default:       []
-     * - Example:       ['login'=>true, 'admin'=>false]
+     * - Example:       ['login'=>'only', 'admin'=>false]
      * - Description:   Send Data only to authenticatet Clients (Send to all clients if list is empty) (if is set to true, only send to auth with matching id)
      * @param (boolean) save_auth
      * - Default:       false
@@ -21,10 +21,11 @@ return [
      */
     'list' => [
         'chat_message' => [
+            'save_auth' => true
         ],
         'wallet' => [
             'cache' => false,
-            'auth'  => ['login' => true]
+            'auth'  => ['login' => 'only']
         ]
     ],
 
@@ -47,8 +48,8 @@ return [
      * - Description:   Save the user Id of the referring user, and send {data: $data, auth: true}
      */
     'dict' => [
-        'roulette_game' => [
-
+        'game' => [
+            
         ]
     ],
 
