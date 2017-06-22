@@ -12,7 +12,7 @@ use Illuminate\Session\SessionManager;
 /**
  * Handle authentication in Laravel.
  */
-class LaravelAuthentication
+trait LaravelAuthentication
 {
     /**
      * Laravel login
