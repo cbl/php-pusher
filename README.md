@@ -69,7 +69,7 @@ $key = "Password";
 // Port
 $port = 8080;
 // Create Server
-$server = new PusherServer('Password', $config, 8080);
+$server = new PusherServer($key, $config, 8080);
 $server->run();
 ```
 
@@ -81,8 +81,10 @@ use PhpPusher\Client;
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-$client = new Client('Password');
+$key    = 'Password';
+$client = new Client($key);
 
+// Set a receiver id
 $receiver = 5;
 // Send a Chat Message
 $client->send('chat_message', 'Hi!', $receiver);

@@ -30,10 +30,8 @@ trait IncommingMessageHandler
         if(!$this->checkMessageStructure($message))
             return false;
         // Set receiver
-        if(isset($message['receiver'])) {
+        if(isset($message['receiver']))
             $client->login = $message['receiver'];
-            $client->admin = $message['receiver'];
-        }
         // Handle Message
         $this->handleMessage($client, $message);
     }
