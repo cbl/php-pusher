@@ -5,6 +5,9 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 class PusherServer extends Server
 {
+    public $key     = 'Password';
+    public $port    = 8080;
+
     public function authLogin($client) {
         $cookies = $client->WebSocket->request->getCookies();
         // return false if the client has no session
@@ -26,6 +29,6 @@ class PusherServer extends Server
     }
 }
 
-$config = require('config.php');
-$server = new PusherServer('Password', $config, 8080);
+$server = new PusherServer();
+$server->setConfig(require('config.php'));
 $server->run();

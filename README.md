@@ -23,6 +23,9 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 class PusherServer extends Server
 {
+    public $key     = 'Password';
+    public $port    = 8080;
+
     public function authLogin($client) {
         $cookies = $client->WebSocket->request->getCookies();
         // return false if the client has no session
@@ -46,6 +49,7 @@ class PusherServer extends Server
 
 // config
 $config = [
+    // Store multiple datasets in cache.
     'list' => [
         'chat_messages' => [
             'save_auth' => true
@@ -55,6 +59,7 @@ $config = [
             'auth'  => ['login' => 'only']
         ]
     ],
+    // Store only one dataset in cache
     'dict' => [
         'player' => [
             'auth' => ['login' => true]
@@ -64,12 +69,9 @@ $config = [
         'online_counter' => true
     ]
 ];
-// Server Key
-$key = "Password";
-// Port
-$port = 8080;
 // Create Server
-$server = new PusherServer($key, $config, 8080);
+$server = new PusherServer();
+$server->setConfig($config);
 $server->run();
 ```
 

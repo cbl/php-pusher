@@ -10,23 +10,19 @@ use Ratchet\Websocket\WsServer;
 abstract class RatchetIoServer
 {
 
-    protected static $DEFAULT_PORT = 8080;
-
-    /**
-     * IoServer Instance.
-     */
-    public $io_server;
-
     /**
      * Server Port
      */
-    protected $port;
+    protected $port = 8080;
 
-    public function __construct($key, $config, $port = null) {
-        // Set Port
-        $this->port         = (!$port) ? self::$DEFAULT_PORT : $port;
+    /**
+     * Server Key
+     */
+    protected $key = 'Password';
+
+    public function setConfig(array $config) {
         // Set Server
-        $interface           = new ServerInterface($key, $config);
+        $interface          = new ServerInterface($this->key, $config);
         $ws_server          = new WsServer($interface);
         $http_server        = new HttpServer($ws_server);
         $this->io_server    = IoServer::factory($http_server, $this->port);
@@ -38,6 +34,10 @@ abstract class RatchetIoServer
      * Run the Websocket server.
      */
     public function run() {
+        if(!isset($this->io_server)) {
+            Console::line('You need to set the config first!');
+            return false;
+        }
         $this->io_server->run();
     }
 
