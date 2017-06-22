@@ -1,7 +1,13 @@
 <?php
 namespace PhpPusher\Auth;
 
+use App;
+use Auth;
+use Config;
+use Crypt;
 use App\User;
+
+use Illuminate\Session\SessionManager;
 
 /**
  * Handle authentication in Laravel.
@@ -28,7 +34,7 @@ class LaravelAuthentication
         $client->session = $session;
         $client->session->start();
         // return user id
-        return $client->session->get(LaravelAuth::getName());
+        return $client->session->get(Auth::getName());
     }
 
     /**
