@@ -42,8 +42,8 @@ trait LaravelAuthentication
      * @param class     $client     The client that should be authenticated
      */
     public function authAdmin($client) {
-        if(isset($this->ratchet::$User))
-            $user = $this->ratchet::$User;
+        if(isset($this->ratchet->$User))
+            $user = $this->ratchet->$User;
         else
             $user = App\User::class;
         return $user::where('id', $client->login)->first()->admin;
