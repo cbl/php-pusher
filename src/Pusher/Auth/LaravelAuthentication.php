@@ -22,8 +22,6 @@ trait LaravelAuthentication
         // get cookie
         $cookie = $client->WebSocket->request->getCookie(config('session.cookie'));
         if(!$cookie)
-            $cookie = $client->WebSocket->request->getQuery('session');
-        if(!$cookie)
             return false;
         // get session id
         $session_cookies    = urldecode($cookie);
@@ -42,6 +40,8 @@ trait LaravelAuthentication
      * @param class     $client     The client that should be authenticated
      */
     public function authAdmin($client) {
+        if(!$client->login)
+            return false;
         if(isset($this->user_model))
             $user = $this->user_model;
         else
