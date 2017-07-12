@@ -82,7 +82,7 @@ trait IncommingMessageHandler
                 'auth' => ($config['save_auth']) ? $client->login : null
             ];
             if($type == 'list') {
-                if(!isset($this->cache['list'][$message['name']]))
+                if(!isset($this->cache['list'][$message['name']]) OR empty($message))
                     $this->cache['list'][$message['name']] = [];
                 $this->cache['list'][$message['name']][] = $message['cache'];
             } else if($type == 'dict') {
