@@ -23,6 +23,10 @@ class Client
             sleep($duration + 1);
     }
 
+    public function reset($name) {
+        $this->sendData('data', $name, null, false);
+    }
+
     private function sendData($type, $name, $data, $receiver=false) {
         $message = [
             'type' => $type,
