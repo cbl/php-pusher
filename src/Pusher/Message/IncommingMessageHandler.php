@@ -84,7 +84,8 @@ trait IncommingMessageHandler
             if($type == 'list') {
                 if(!isset($this->cache['list'][$message['name']]) OR !$message['data'])
                     $this->cache['list'][$message['name']] = [];
-                $this->cache['list'][$message['name']][] = $message['cache'];
+                if($message['data'])
+                    $this->cache['list'][$message['name']][] = $message['cache'];
             } else if($type == 'dict') {
                 $this->cache['dict'][$message['name']] = $message['cache'];
             }
