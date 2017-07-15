@@ -87,13 +87,16 @@ trait IncommingMessageHandler
                 if($message['data'])
                     $this->cache['list'][$message['name']][] = $message['cache'];
             } else if($type == 'dict') {
+                if(!$message['data'])
+                    $message['cache']['data'] = [];
                 $this->cache['dict'][$message['name']] = $message['cache'];
             }
         } else {
             $message['cache'] = $message['data'];
         }
         // Send
-        $this->sendNewDataToAll($client, $type, $message['name'], $message['cache']);
+        if($message['data'])
+            $this->sendNewDataToAll($client, $type, $message['name'], $message['cache']);
     }
 
     /**
